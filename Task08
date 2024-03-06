@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="todoApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Animated To-Do List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background-color: #f9f9f9;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    li.ng-enter,
+    li.ng-leave {
+      transition: all 0.5s ease-out;
+    }
+    li.ng-enter {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    li.ng-enter-active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    li.ng-leave {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    li.ng-leave-active {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" ng-controller="TodoListController">
+    <h1>To-Do List</h1>
+    <input type="text" ng-model="newTodo" placeholder="Add a new task...">
+    <button ng-click="addTodo()">Add</button>
+    <ul>
+      <li ng-repeat="todo in todos" ng-animate="'animate'" ng-click="removeTodo($index)">{{ todo }}</li>
+    </ul>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('todoApp', ['ngAnimate'])
+      .controller('TodoListController', function($scope) {
+        $scope.todos = [];
+
+        $scope.addTodo = function() {
+          if ($scope.newTodo !== '') {
+            $scope.todos.push($scope.newTodo);
+            $scope.newTodo = '';
+          }
+        };
+
+        $scope.removeTodo = function(index) {
+          $scope.todos.splice(index, 1);
+        };
+      });
+  </script>
+</body>
+</html>
