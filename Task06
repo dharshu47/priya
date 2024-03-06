@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="quizApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Quiz App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .options {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .option {
+      margin: 0 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" ng-controller="QuizController">
+    <h1>Interactive Quiz</h1>
+    <div class="question">{{ currentQuestion.text }}</div>
+    <div class="options">
+      <button ng-repeat="option in currentQuestion.options" ng-click="checkAnswer(option)">
+        {{ option }}
+      </button>
+    </div>
+    <div ng-show="showScore">
+      <h2>Your Score: {{ score }}</h2>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('quizApp', [])
+      .controller('QuizController', function($scope) {
+        $scope.questions = [
+          {
+            text: 'What is the capital of France?',
+            options: ['Paris', 'London', 'Berlin'],
+            correctAnswer: 'Paris'
+          },
+          {
+            text: 'What is 2 + 2?',
+            options: ['3', '4', '5'],
+            correctAnswer: '4'
+          },
+          {
+            text: 'Who wrote "To Kill a Mockingbird"?',
+            options: ['Harper Lee', 'Ernest Hemingway', 'F. Scott Fitzgerald'],
+            correctAnswer: 'Harper Lee'
+          }
+        ];
+
+        $scope.currentQuestionIndex = 0;
+        $scope.score = 0;
+        $scope.showScore = false;
+
+        $scope.currentQuestion = $scope.questions[$scope.currentQuestionIndex];
+
+        $scope.checkAnswer = function(selectedOption) {
+          if (selectedOption === $scope.currentQuestion.correctAnswer) {
+            $scope.score++;
+          }
+
+          if ($scope.currentQuestionIndex < $scope.questions.length - 1) {
+            $scope.currentQuestionIndex++;
+            $scope.currentQuestion = $scope.questions[$scope.currentQuestionIndex];
+          } else {
+            $scope.showScore = true;
+          }
+        };
+      });
+  </script>
+</body>
+</html>
