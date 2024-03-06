@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="authApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Authentication System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    input[type="text"], input[type="password"], button {
+      display: block;
+      margin: 10px 0;
+      padding: 8px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .error {
+      color: red;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body ng-controller="AuthController as authCtrl">
+  <div class="container">
+    <h2>User Authentication</h2>
+    <div ng-if="!authCtrl.isLoggedIn">
+      <input type="text" placeholder="Username" ng-model="authCtrl.username">
+      <input type="password" placeholder="Password" ng-model="authCtrl.password">
+      <button ng-click="authCtrl.login()">Login</button>
+      <p class="error" ng-if="authCtrl.loginError">{{ authCtrl.loginError }}</p>
+      <hr>
+      <p>Don't have an account? <a href="#" ng-click="authCtrl.showSignupForm()">Sign up</a></p>
+    </div>
+    <div ng-if="authCtrl.showSignup">
+      <input type="text" placeholder="Username" ng-model="authCtrl.newUsername">
+      <input type="password" placeholder="Password" ng-model="authCtrl.newPassword">
+      <button ng-click="authCtrl.signup()">Sign up</button>
+      <p class="error" ng-if="authCtrl.signupError">{{ authCtrl.signupError }}</p>
+      <hr>
+      <p>Already have an account? <a href="#" ng-click="authCtrl.showLoginForm()">Login</a></p>
+    </div>
+    <div ng-if="authCtrl.isLoggedIn">
+      <p>Welcome, {{ authCtrl.username }}!</p>
+      <button ng-click="authCtrl.logout()">Logout</button>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('authApp', [])
+      .controller('AuthController', function() {
+        var vm = this;
+
+        vm.isLoggedIn = false;
+        vm.showSignup = false;
+        vm.username = '';
+        vm.password = '';
+        vm.newUsername = '';
+        vm.newPassword = '';
+        vm.loginError = '';
+        vm.signupError = '';
+
+        vm.login = function() {
+          // Implement your login logic here, e.g., authenticate with a backend server
+          if (vm.username === 'user' && vm.password === 'password') {
+            vm.isLoggedIn = true;
+            vm.loginError = '';
+          } else {
+            vm.isLoggedIn = false;
+            vm.loginError = 'Invalid username or password';
+          }
+        };
+
+        vm.logout = function() {
+          vm.isLoggedIn = false;
+          vm.username = '';
+          vm.password = '';
+        };
+
+        vm.signup = function() {
+          // Implement your signup logic here, e.g., register a new user with a backend server
+          // For simplicity, assume signup is successful if username and password are provided
+          if (vm.newUsername && vm.newPassword) {
+            vm.username = vm.newUsername;
+            vm.password = vm.newPassword;
+            vm.isLoggedIn = true;
+            vm.signupError = '';
+          } else {
+            vm.isLoggedIn = false;
+            vm.signupError = 'Username and password are required';
+          }
+        };
+
+        vm.showSignupForm = function() {
+          vm.showSignup = true;
+        };
+
+        vm.showLoginForm = function() {
+          vm.showSignup = false;
+        };
+      });
+  </script>
+</body>
+</html>
