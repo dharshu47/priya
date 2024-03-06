@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="productCatalogApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Catalog with Filters</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    .product {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+    .product:last-child {
+      border-bottom: none;
+    }
+    .filters {
+      margin-bottom: 20px;
+    }
+    .filter {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" ng-controller="ProductCatalogController">
+    <h1>Product Catalog</h1>
+    <div class="filters">
+      <label>Category:</label>
+      <select ng-model="selectedCategory">
+        <option value="">All</option>
+        <option ng-repeat="category in categories" value="{{ category }}">{{ category }}</option>
+      </select>
+      <label>Feature:</label>
+      <select ng-model="selectedFeature">
+        <option value="">All</option>
+        <option ng-repeat="feature in features" value="{{ feature }}">{{ feature }}</option>
+      </select>
+    </div>
+    <div class="product" ng-repeat="product in products | filter: { category: selectedCategory, features: selectedFeature }">
+      <h2>{{ product.name }}</h2>
+      <p>Category: {{ product.category }}</p>
+      <p>Price: ${{ product.price }}</p>
+      <p>Features: {{ product.features.join(', ') }}</p>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('productCatalogApp', [])
+      .controller('ProductCatalogController', function($scope) {
+        $scope.products = [
+          { name: 'Product 1', category: 'Electronics', price: 499.99, features: ['WiFi', 'Bluetooth'] },
+          { name: 'Product 2', category: 'Clothing', price: 39.99, features: ['Cotton', 'Machine Washable'] },
+          { name: 'Product 3', category: 'Electronics', price: 299.99, features: ['4K Display', 'HDR'] },
+          { name: 'Product 4', category: 'Furniture', price: 599.99, features: ['Wooden Frame', 'Leather Upholstery'] },
+          { name: 'Product 5', category: 'Clothing', price: 19.99, features: ['Polyester', 'Hand Wash Only'] }
+        ];
+
+        $scope.categories = ['Electronics', 'Clothing', 'Furniture'];
+        $scope.features = ['WiFi', 'Bluetooth', 'Cotton', 'Machine Washable', '4K Display', 'HDR', 'Wooden Frame', 'Leather Upholstery', 'Polyester', 'Hand Wash Only'];
+
+        $scope.selectedCategory = '';
+        $scope.selectedFeature = '';
+      });
+  </script>
+</body>
+</html>
