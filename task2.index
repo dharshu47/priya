@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="imageGalleryApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Image Gallery</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .image-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .image-item {
+      margin: 10px;
+      cursor: pointer;
+    }
+    .image-item img {
+      width: 200px;
+      height: 200px;
+      border-radius: 5px;
+    }
+    .image-details {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
+  </style>
+</head>
+<body ng-controller="ImageGalleryController as galleryCtrl">
+  
+  <div class="image-gallery">
+    <div class="image-item" ng-repeat="image in galleryCtrl.images" ng-click="galleryCtrl.showDetails(image)">
+      <img ng-src="{{ image.url }}" alt="{{ image.title }}">
+    </div>
+  </div>
+
+  <div class="image-details" ng-show="galleryCtrl.selectedImage">
+    <h2>{{ galleryCtrl.selectedImage.title }}</h2>
+    <img ng-src="{{ galleryCtrl.selectedImage.url }}" alt="{{ galleryCtrl.selectedImage.title }}">
+    <p>{{ galleryCtrl.selectedImage.description }}</p>
+    <button ng-click="galleryCtrl.hideDetails()">Close</button>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('imageGalleryApp', [])
+      .controller('ImageGalleryController', function() {
+        var vm = this;
+
+        vm.images = [
+          {
+            title: 'Image 1',
+            url: 'image1.jpg',
+            description: 'Description for Image 1'
+          },
+          {
+            title: 'Image 2',
+            url: 'image2.jpg',
+            description: 'Description for Image 2'
+          },
+          {
+            title: 'Image 3',
+            url: 'image3.jpg',
+            description: 'Description for Image 3'
+          }
+        ];
+
+        vm.showDetails = function(image) {
+          vm.selectedImage = image;
+          document.querySelector('.image-details').style.display = 'block';
+        };
+
+        vm.hideDetails = function() {
+          vm.selectedImage = null;
+          document.querySelector('.image-details').style.display = 'none';
+        };
+      });
+  </script>
+</body>
+</html>
