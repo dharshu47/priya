@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="weatherApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-time Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2, h3 {
+      text-align: center;
+    }
+    .weather-info {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body ng-controller="WeatherController as weatherCtrl">
+  <div class="container">
+    <h1>Real-time Weather App</h1>
+    <div class="weather-info">
+      <h2>{{ weatherCtrl.city }}</h2>
+      <h3>{{ weatherCtrl.weather }}</h3>
+      <p>Temperature: {{ weatherCtrl.temperature }}°C</p>
+      <p>Humidity: {{ weatherCtrl.humidity }}%</p>
+      <p>Wind Speed: {{ weatherCtrl.windSpeed }} km/h</p>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('weatherApp', [])
+      .controller('WeatherController', function($http, $interval) {
+        var vm = this;
+
+        vm.city = 'New York'; // Default city
+        vm.weather = '';
+        vm.temperature = '';
+        vm.humidity = '';
+        vm.windSpeed = '';
+
+        // Function to fetch weather data
+        vm.getWeather = function() {
+          var apiKey = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API key
+          var apiUrl = 'http://api.openweathermap.org/data/2.5/weather?q=' + vm.city + '&units=metric&appid=' + apiKey;
+
+          $http.get(apiUrl)
+            .then(function(response) {
+              vm.weather = response.data.weather[0].description;
+              vm.temperature = response.data.main.temp;
+              vm.humidity = response.data.main.humidity;
+              vm.windSpeed = response.data.wind.speed;
+            }, function(error) {
+              console.log('Error fetching weather data:', error);
+            });
+        };
+
+        // Fetch weather data initially
+        vm.getWeather();
+
+        // Fetch weather data every 30 minutes
+        $interval(vm.getWeather, 1800000); // 1800000 milliseconds = 30 minutes
+      });
+  </script>
+</body>
+</html>
+
